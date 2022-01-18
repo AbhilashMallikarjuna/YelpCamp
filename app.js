@@ -2,6 +2,7 @@
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
+const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
 const Campground = require("./models/campground");
 
@@ -16,6 +17,7 @@ db.once("open", () => {
 // Creating an express app
 const app = express();
 
+app.engine("ejs", ejsMate);
 // Setting ejs as view engine in the express path
 app.set("view engine", "ejs");
 // Creating a general path so that the app can started from anywhere
