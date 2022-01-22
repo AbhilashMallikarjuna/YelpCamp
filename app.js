@@ -3,13 +3,13 @@ const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
 const ejsMate = require("ejs-mate");
-const Joi = require("joi");
-const { campgroundSchema, reviewSchema } = require("./schemas");
-const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
 const methodOverride = require("method-override");
-const Campground = require("./models/campground");
-const Review = require("./models/reviews");
+const session = require("express-session");
+const flash = require("connect-flash");
+
+const campgrounds = require("./routes/campgrounds");
+const reviews = require("./routes/reviews");
 
 // Connecting mongoose database
 mongoose.connect("mongodb://localhost:27017/yelp-camp");
@@ -19,12 +19,13 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
   console.log("Database connected");
 });
-// Creating an express app
-const app = express();
+
+const app = express(); // Creating an express app
 
 app.engine("ejs", ejsMate);
-// Setting ejs as view engine in the express path
-app.set("view engine", "ejs");
+
+app.set("view engine", "ejs"); // Setting ejs as view engine in the express path
+
 // Creating a general path so that the app can started from anywhere
 // otherwise it can only recognise views folder from the project dir
 app.set("views", path.join(__dirname, "/views"));
@@ -32,130 +33,37 @@ app.set("views", path.join(__dirname, "/views"));
 // This will encode the response we get from the post request of a form
 // Without this , the browser cannot encode the request and will show blank screen
 app.use(express.urlencoded({ extended: true }));
-
+app.use(express.static(path.join(__dirname, "public")));
 app.use(methodOverride("_method"));
 
-//validating user inputs using Joi middleware
-const validateCampground = (req, res, next) => {
-  const { error } = campgroundSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(msg, 400);
-  } else {
-    next();
-  }
+const sessionConfig = {
+  secret: "ThisShouldBeABetterSecret",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  },
 };
+app.use(session(sessionConfig));
+app.use(flash());
 
-const validateReview = (req, res, next) => {
-  const { error } = reviewSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(msg, 400);
-  } else {
-    next();
-  }
-};
+// For every single request, we get the message from flash function and
+// it will be stores in the local storage so that it can be accessed from anywhere
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
+});
 // Routes
+
+app.use("/campgrounds", campgrounds);
+app.use("/campgrounds/:id/reviews", reviews);
+
 app.get("/", (req, res) => {
   res.render("home");
 });
-
-// To show all the campgrounds
-app.get(
-  "/campgrounds",
-  catchAsync(async (req, res) => {
-    const campgrounds = await Campground.find({});
-    res.render("campgrounds/index", { campgrounds });
-  })
-);
-
-// To create a new campground
-// If this route is placed after "/campgrounds/:id" route, then the new route will not be reached
-// because browser assumes the new word as an ID and search for new in the database
-// So this route is placed before the show route
-app.get("/campgrounds/new", (req, res) => {
-  res.render("campgrounds/new");
-});
-
-app.post(
-  "/campgrounds",
-  validateCampground,
-  catchAsync(async (req, res, next) => {
-    const campground = new Campground(req.body.campground);
-    await campground.save();
-    res.redirect(`/campgrounds/${campground._id}`);
-  })
-);
-
-// TO show a campground using ID
-app.get(
-  "/campgrounds/:id",
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findById(id).populate("reviews");
-    res.render("campgrounds/show", { campground });
-  })
-);
-
-// To edit a campground
-app.get(
-  "/campgrounds/:id/edit",
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findById(id);
-    res.render("campgrounds/edit", { campground });
-  })
-);
-
-// To save the edited campground
-app.put(
-  "/campgrounds/:id",
-  validateCampground,
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findByIdAndUpdate(id, {
-      ...req.body.campground, // here we are destructuring the req body
-    });
-    res.redirect(`/campgrounds/${campground._id}`);
-  })
-);
-// To delete a campground
-app.delete(
-  "/campgrounds/:id",
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-    await Campground.findByIdAndDelete(id);
-    res.redirect("/campgrounds");
-  })
-);
-
-// To add review to a campground
-app.post(
-  "/campgrounds/:id/reviews",
-  validateReview,
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findById(id);
-    const review = new Review(req.body.review);
-    campground.reviews.push(review);
-    await review.save();
-    await campground.save();
-    res.redirect(`/campgrounds/${campground._id}`);
-  })
-);
-
-// To delete a review
-app.delete(
-  "/campgrounds/:campId/reviews/:reviewId",
-  catchAsync(async (req, res) => {
-    const { campId, reviewId } = req.params;
-    await Campground.findByIdAndUpdate(campId, {
-      $pull: { reviews: reviewId },
-    });
-    await Review.findByIdAndDelete(reviewId);
-    res.redirect(`/campgrounds/${campId}`);
-  })
-);
 
 app.all("*", (req, res, next) => {
   next(new ExpressError("Page Not Found", 404));
