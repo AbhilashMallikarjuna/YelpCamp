@@ -4,6 +4,7 @@ const catchAsync = require("../utils/catchAsync");
 const ExpressError = require("../utils/ExpressError");
 const Campground = require("../models/campground");
 const { campgroundSchema } = require("../schemas");
+const { isLoggedIn } = require("../middleware.js");
 
 //validating user inputs using Joi middleware
 const validateCampground = (req, res, next) => {
@@ -29,13 +30,14 @@ router.get(
 // If this route is placed after "/campgrounds/:id" route, then the new route will not be reached
 // because browser assumes the new word as an ID and search for new in the database
 // So this route is placed before the show route
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
   res.render("campgrounds/new");
 });
 
 router.post(
   "/",
   validateCampground,
+  isLoggedIn,
   catchAsync(async (req, res, next) => {
     const campground = new Campground(req.body.campground);
     await campground.save();
@@ -61,6 +63,7 @@ router.get(
 // To edit a campground
 router.get(
   "/:id/edit",
+  isLoggedIn,
   catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
@@ -75,6 +78,7 @@ router.get(
 // To save the edited campground
 router.put(
   "/:id",
+  isLoggedIn,
   validateCampground,
   catchAsync(async (req, res) => {
     const { id } = req.params;
@@ -88,6 +92,7 @@ router.put(
 // To delete a campground
 router.delete(
   "/:id",
+  isLoggedIn,
   catchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
