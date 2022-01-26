@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 const Campground = require("../models/campground");
 const cities = require("./cities");
-const { places, descriptors } = require("./seedhelpers");
+const { places, descriptors, stockImages } = require("./seedhelpers");
 
 // Connecting mongoose database
 mongoose.connect("mongodb://localhost:27017/yelp-camp");
@@ -24,7 +24,7 @@ const seedDB = async () => {
       author: "61ecfb3b62629f290090a386",
       location: `${cities[random1000].city}, ${cities[random1000].state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
-      image: `https://source.unsplash.com/collection/483251/600x600`,
+      images: stockImages,
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo quidem eius reprehenderit. Cupiditate, libero magni? Cum, consequuntur? Nisi repellendus quo dicta voluptatum modi, quae beatae, architecto molestiae, quasi quod dolore.",
       price: price,

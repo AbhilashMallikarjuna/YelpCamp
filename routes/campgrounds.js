@@ -3,6 +3,9 @@ const router = express.Router();
 const catchAsync = require("../utils/catchAsync");
 const Campground = require("../models/campground");
 const campgrounds = require("../controllers/campgrounds");
+const multer = require("multer")
+const { storage } = require("../cloudinary/index")
+const upload = multer({ storage })
 
 const {
   isLoggedIn,
@@ -14,10 +17,12 @@ router
   .route("/")
   .get(catchAsync(campgrounds.index))
   .post(
-    validateCampground,
     isLoggedIn,
+    upload.array("image"),
+    validateCampground,
     catchAsync(campgrounds.createCampground)
-  );
+  )
+
 // To create a new campground
 // If this route is placed after "/campgrounds/:id" route, then the new route will not be reached
 // because browser assumes the new word as an ID and search for new in the database
@@ -30,6 +35,7 @@ router.route("/:id")
   .put(
     isLoggedIn,
     isAuthor,
+    upload.array("image"),
     validateCampground,
     catchAsync(campgrounds.updateCampground)
   )

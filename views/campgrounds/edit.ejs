@@ -8,6 +8,7 @@
       method="post"
       novalidate
       class="validated-form"
+      enctype="multipart/form-data"
     >
       <div class="mb-3">
         <label class="form-label" for="title">Title</label>
@@ -34,17 +35,19 @@
         <div class="valid-feedback">Looks good</div>
       </div>
       <div class="mb-3">
-        <label class="form-label" for="image">Image URL</label>
+        <label for="image" class="form-label">Add images</label>
         <input
           class="form-control"
-          type="text"
-          name="campground[image]"
+          type="file"
           id="image"
-          value="<%= campground.image %>"
-          required
+          multiple
+          name="image"
         />
-        <div class="valid-feedback">Looks good</div>
       </div>
+      <!-- <div class="mb-3">
+        <label class="form-label" for="image">Add images</label>
+        <input type="file" name="image" id="image" multiple />
+      </div> -->
       <div class="mb-3">
         <label class="form-label" for="price">Campground Price</label>
         <div class="input-group">
@@ -75,6 +78,42 @@
 <%= campground.description %></textarea
         >
         <div class="valid-feedback">Looks good</div>
+      </div>
+      <!-- <div class="mb-3">
+        <% campground.images.forEach(function (img, i){ %>
+        <img src="<%=img.thumbnail%>" alt="" srcset="" class="img-thumbnail" />
+        <div class="form-check-inline">
+          <input
+            type="checkbox"
+            name="deleteImages[]"
+            id="image-<%=i%>"
+            value="<%=img.filename%>"
+          />
+        </div>
+        <label for="image-<%=i%>">Delete?</label>
+        <% }) %>
+      </div> -->
+      <h5>Delete Images</h5>
+      <div class="row row-cols-1 row-cols-md-4 g-4 mb-3">
+        <% campground.images.forEach((image, i) => { %>
+        <div class="col">
+          <div class="card">
+            <img class="card-img" src="<%= image.thumbnail %>" alt="" />
+            <div class="card-img-overlay text-end pt-1 pe-2">
+              <label class="visually-hidden" for="image-<%= i %>"
+                >Delete Image</label
+              >
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="deleteImages[]"
+                value="<%= image.filename %>"
+                id="image-<%= i %>"
+              />
+            </div>
+          </div>
+        </div>
+        <% }) %>
       </div>
       <div class="mb-3">
         <button class="btn btn-success">Update Campground</button>
