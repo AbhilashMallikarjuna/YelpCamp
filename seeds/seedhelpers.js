@@ -45,39 +45,31 @@ module.exports.places = [
 
 module.exports.stockImages = [
   {
-    url: 'https://res.cloudinary.com/yelpcampabhi/image/upload/v1642937798/YelpCamp/ftqe2n7yo6tido4lqfx2.jpg',
-    filename: 'YelpCamp/ftqe2n7yo6tido4lqfx2'
+    url: 'https://res.cloudinary.com/yelpcampabhi/image/upload/v1643808890/YelpCamp/ncejaigagoffuqnf8lou.jpg',
+    filename: 'YelpCamp/ncejaigagoffuqnf8lou'
   },
   {
-    url: 'https://res.cloudinary.com/yelpcampabhi/image/upload/v1642937798/YelpCamp/iqc4regcgcsmkz4glbp0.jpg',
-    filename: 'YelpCamp/iqc4regcgcsmkz4glbp0'
+    url: 'https://res.cloudinary.com/yelpcampabhi/image/upload/v1643288646/YelpCamp/vfe4ecirhpv2nomtadgw.jpg',
+    filename: 'YelpCamp/vfe4ecirhpv2nomtadgw'
   },
   {
-    url: 'https://res.cloudinary.com/yelpcampabhi/image/upload/v1642937798/YelpCamp/c15dniosr95vahrsw27w.jpg',
-    filename: 'YelpCamp/c15dniosr95vahrsw27w'
+    url: 'https://res.cloudinary.com/yelpcampabhi/image/upload/v1643288645/YelpCamp/joobru8zzqwjpa4wc357.jpg',
+    filename: 'YelpCamp/joobru8zzqwjpa4wc357'
   },
   {
-    url: 'https://res.cloudinary.com/yelpcampabhi/image/upload/v1642937797/YelpCamp/cync083vtivjlmf9x2hh.jpg',
-    filename: 'YelpCamp/cync083vtivjlmf9x2hh'
+    url: 'https://res.cloudinary.com/yelpcampabhi/image/upload/v1643288645/YelpCamp/yqqx25jddyyticw9knou.jpg',
+    filename: 'YelpCamp/yqqx25jddyyticw9knou'
   },
   {
-    url: 'https://res.cloudinary.com/yelpcampabhi/image/upload/v1642937798/YelpCamp/qokpctopahul0hduphpl.jpg',
-    filename: 'YelpCamp/qokpctopahul0hduphpl'
+    url: 'https://res.cloudinary.com/yelpcampabhi/image/upload/v1643288644/YelpCamp/igfissg6tdqqimgqblfx.jpg',
+    filename: 'YelpCamp/igfissg6tdqqimgqblfx'
   },
   {
-    url: 'https://res.cloudinary.com/yelpcampabhi/image/upload/v1642937798/YelpCamp/f2ec862pxjz4uaefded9.jpg',
-    filename: 'YelpCamp/f2ec862pxjz4uaefded9'
-  },
-  {
-    url: 'https://res.cloudinary.com/yelpcampabhi/image/upload/v1642937797/YelpCamp/ko2ylobj5grhgnozyshf.jpg',
-    filename: 'YelpCamp/ko2ylobj5grhgnozyshf'
+    url: 'https://res.cloudinary.com/yelpcampabhi/image/upload/v1643177322/YelpCamp/epjrfhk6vlpbscidr3ru.jpg',
+    filename: 'YelpCamp/epjrfhk6vlpbscidr3ru'
   },
   {
     url: 'https://res.cloudinary.com/yelpcampabhi/image/upload/v1642937797/YelpCamp/dy3cpansukr99ucxejof.jpg',
     filename: 'YelpCamp/dy3cpansukr99ucxejof'
-  },
-  {
-    url: 'https://res.cloudinary.com/yelpcampabhi/image/upload/v1642937798/YelpCamp/tetxody2oocooeknc2ns.jpg',
-    filename: 'YelpCamp/tetxody2oocooeknc2ns'
   }
 ]
